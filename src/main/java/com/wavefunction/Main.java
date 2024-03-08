@@ -102,8 +102,7 @@ public class Main {
 		return (BufferedImage) knot;
 	}
 	
-	static void runTiledModel() {
-		String subset = "Dense Fabric";
+	static void runTiledModel(String subset) {
 	    int width = 32;
 	    int height = 32;
 	    boolean periodic = true;
@@ -154,9 +153,15 @@ public class Main {
 	        false
 	      );
 	      
-	      Boolean finished = tiled_model.run(random.nextInt(), 0);
-	      
-	      System.out.println(String.format("Finished %s", finished));
+	      Boolean finished = false;
+
+			for (int i = 0; i < 10; i++) {
+				finished = tiled_model.run(random.nextInt(), 0);
+				if (finished) break;
+			}
+
+			System.out.println("Finished: " + finished);
+			if (!finished) return;
 	      
 	      BufferedImage output = tiled_model.graphics();
 	      
@@ -168,9 +173,9 @@ public class Main {
 	    }
 	}
 	
-	static void runOverlappingModel() {
+	static void runOverlappingModel(String fileName) {
 	    try {
-			BufferedImage image_buffered = ImageIO.read(new File("Flowers.png"));
+			BufferedImage image_buffered = ImageIO.read(new File(fileName));
 			Random random = new Random();
 
 			OverlappingModel model = new OverlappingModel(
@@ -183,9 +188,16 @@ public class Main {
 		  		2,
 				102
 			);
-			boolean finished = model.run(random.nextInt(), 0);
+
+			Boolean finished = false;
+
+			for (int i = 0; i < 10; i++) {
+				finished = model.run(random.nextInt(), 0);
+				if (finished) break;
+			}
 
 			System.out.println("Finished: " + finished);
+			if (!finished) return;
 
 			BufferedImage output = model.graphics();
 
@@ -197,7 +209,7 @@ public class Main {
 	}
 	
   public static void main(String[] args) {
-	// runTiledModel();
-    runOverlappingModel();
+	// runTiledModel("Dense Fabric");
+    runOverlappingModel("citytemplate.png");
   }
 }
