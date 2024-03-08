@@ -1,7 +1,5 @@
 package com.wavefunction;
 
-
-
 import java.awt.image.BufferedImage;
 import java.lang.Math;
 import java.util.Random;

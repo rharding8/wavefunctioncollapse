@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-//import java.io.File;
-//import java.io.IOException;
 import java.util.Random;
 import javax.imageio.ImageIO;
 import org.w3c.dom.*;
