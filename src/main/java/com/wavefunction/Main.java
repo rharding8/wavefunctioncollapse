@@ -209,7 +209,7 @@ public class Main {
 	}
 	
   public static void main(String[] args) {
-	runTiledModel("C");
+	runTiledModel("Dense Fabric");
     // runOverlappingModel("citytemplate.png");
   }
 }

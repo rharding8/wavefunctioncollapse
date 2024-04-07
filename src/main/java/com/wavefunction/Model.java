@@ -178,6 +178,7 @@ abstract class Model {
 
 
   protected void propagate() {
+    ExecutorService exec = Executors.newFixedThreadPool(4);
     while (this.stacksize > 0) {
       ConcurrentLinkedQueue<Integer> queue = new ConcurrentLinkedQueue<>();
       StackEntry e1 = this.stack[this.stacksize - 1];
@@ -200,35 +201,47 @@ abstract class Model {
       }
 
       while (queue.isEmpty()) {
-        int nextIndex = queue.poll();
-        for (int d = 0; d < 4; d++) {
-          int x1 = nextIndex % Model.this.FMX;
-          int y1 = nextIndex / Model.this.FMX;
-          int dx = Model.DX[d], dy = Model.DY[d];
-          int x2 = x1 + dx, y2 = y1 + dy;
-  
-          if (Model.this.onBoundary(x2, y2)) continue;
-  
-          if (x2 < 0) x2 += Model.this.FMX; else if (x2 >= Model.this.FMX) x2 -= Model.this.FMX;
-          if (y2 < 0) y2 += Model.this.FMY; else if (y2 >= Model.this.FMY) y2 -= Model.this.FMY;
-  
-          int i2 = x2 + y2 * Model.this.FMX;
-          int[] p = Model.this.propagator[d][e1.getSecond()];
-          int[][] compat = Model.this.compatible[i2];
-  
-          for (int l = 0; l < p.length; l++) {
-            int t2 = p[l];
-            int[] comp = compat[t2];
-  
-            comp[d]--;
-            
-            if (comp[d] == 0) {
-              Model.this.ban(i2, t2);
-              queue.add(i2);
+        exec.submit(new Runnable() {
+          @Override
+          public void run() {
+            int nextIndex = queue.poll();
+            for (int d = 0; d < 4; d++) {
+              int x1 = nextIndex % Model.this.FMX;
+              int y1 = nextIndex / Model.this.FMX;
+              int dx = Model.DX[d], dy = Model.DY[d];
+              int x2 = x1 + dx, y2 = y1 + dy;
+      
+              if (Model.this.onBoundary(x2, y2)) continue;
+      
+              if (x2 < 0) x2 += Model.this.FMX; else if (x2 >= Model.this.FMX) x2 -= Model.this.FMX;
+              if (y2 < 0) y2 += Model.this.FMY; else if (y2 >= Model.this.FMY) y2 -= Model.this.FMY;
+      
+              int i2 = x2 + y2 * Model.this.FMX;
+              int[] p = Model.this.propagator[d][e1.getSecond()];
+              int[][] compat = Model.this.compatible[i2];
+      
+              for (int l = 0; l < p.length; l++) {
+                int t2 = p[l];
+                int[] comp = compat[t2];
+      
+                comp[d]--;
+                
+                if (comp[d] == 0) {
+                  Model.this.ban(i2, t2);
+                  queue.add(i2);
+                }
+              }
             }
           }
-        }
+        });
       }
+    }
+    exec.shutdown();
+    try {
+      exec.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+    } catch (Exception e) {
+      exec.shutdownNow();
+      e.printStackTrace();
     }
   }
 
