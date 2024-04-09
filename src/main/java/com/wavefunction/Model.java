@@ -162,7 +162,6 @@ abstract class Model {
 
     int[] comp = this.compatible[i][t];
     for (int d = 0; d < 4; d++) comp[d] = 0;
-    this.stackQueue.add(new StackEntry(i, t));
 
     this.sumsOfOnes[i] -= 1;
     this.sumsOfWeights[i] -= this.weights[t];
@@ -170,6 +169,7 @@ abstract class Model {
 
     double sum = this.sumsOfWeights[i];
     this.entropies[i] = Math.log(sum) - this.sumsOfWeightLogWeights[i] / sum;
+    this.stackQueue.add(new StackEntry(i, t));
   }
 
 

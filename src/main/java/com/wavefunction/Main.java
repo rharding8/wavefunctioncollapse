@@ -103,8 +103,8 @@ public class Main {
 	}
 	
 	static void runTiledModel(String subset) {
-	    int width = 32;
-	    int height = 32;
+	    int width = 72;
+	    int height = 72;
 	    boolean periodic = true;
 
 	    try {
@@ -207,7 +207,9 @@ public class Main {
 	}
 	
   public static void main(String[] args) {
-	runTiledModel("Dense Fabric");
+	long startTime = System.nanoTime();
+	runTiledModel("Dense");
     // runOverlappingModel("citytemplate.png");
+	System.out.printf("Execution Time: %f seconds.\n", (System.nanoTime() - startTime) / 1e9);
   }
 }
