@@ -208,7 +208,7 @@ public class Main {
 	
   public static void main(String[] args) {
 	long startTime = System.nanoTime();
-	runTiledModel("Dense");
+	runTiledModel("Fabric");
     // runOverlappingModel("citytemplate.png");
 	System.out.printf("Execution Time: %f seconds.\n", (System.nanoTime() - startTime) / 1e9);
   }
